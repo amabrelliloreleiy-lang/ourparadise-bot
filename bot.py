@@ -117,4 +117,34 @@ def about(message):
 print("Бот запущен!")
 
 bot.remove_webhook()
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+    data = call.data.split("_")
+
+    action = data[0]
+    user_id = data[1]
+
+    if action == "approve":
+        bot.send_message(
+            user_id,
+            "✅ Ваша заявка одобрена!"
+        )
+
+        bot.answer_callback_query(
+            call.id,
+            "Заявка одобрена"
+        )
+
+    elif action == "reject":
+        bot.send_message(
+            user_id,
+            "❌ К сожалению, ваша заявка не одобрена."
+        )
+
+        bot.answer_callback_query(
+            call.id,
+            "Заявка отклонена"
+        )
+
+
 bot.infinity_polling()
