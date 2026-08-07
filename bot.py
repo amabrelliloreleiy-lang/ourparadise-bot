@@ -82,4 +82,5 @@ def about(message):
 
 print("Бот запущен!")
 
+bot.remove_webhook()
 bot.infinity_polling()
