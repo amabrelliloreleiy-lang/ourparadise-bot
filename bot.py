@@ -5,7 +5,7 @@ TOKEN = "7724616594:AAH97k_N3XMIxwMCfrt0nLLsxtd1HbGlyIE"
 
 bot = telebot.TeleBot(TOKEN)
 
-ADMIN_ID = 0  # сюда позже поставим твой Telegram ID
+ADMIN_ID = 6824091360
 
 
 @bot.message_handler(commands=["start"])
