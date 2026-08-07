@@ -40,22 +40,48 @@ def get_name(message):
 
     msg = bot.send_message(
         message.chat.id,
-        "Теперь напиши свой возраст:"
+        "📸 Теперь отправь фото паспорта, где видно твоё фото и Telegram username:"
     )
     bot.register_next_step_handler(
         msg,
-        lambda m: get_age(m, user_name)
+        lambda m: get_passport(m, user_name)
     )
 
 
-def get_age(message, user_name):
-    age = message.text
+def get_passport(message, user_name):
+    if not message.photo:
+        msg = bot.send_message(
+            message.chat.id,
+            "❗Пожалуйста, отправь именно фото паспорта."
+        )
+        bot.register_next_step_handler(
+            msg,
+            lambda m: get_passport(m, user_name)
+        )
+        return
+
+    photo_id = message.photo[-1].file_id
 
     application = (
         "📩 Новая заявка!\n\n"
         f"👤 Имя: {user_name}\n"
-        f"🎂 Возраст пришлите фото паспорта: {age}\n"
         f"🆔 ID: {message.from_user.id}"
+    )
+
+    bot.send_message(
+        ADMIN_ID,
+        application
+    )
+
+    bot.send_photo(
+        ADMIN_ID,
+        photo_id,
+        caption="📸 Фото паспорта"
+    )
+
+    bot.send_message(
+        message.chat.id,
+        "✅ Спасибо! Твоя анкета отправлена."
     )
 
     if ADMIN_ID != 0:
