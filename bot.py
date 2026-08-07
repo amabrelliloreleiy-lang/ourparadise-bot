@@ -62,19 +62,20 @@ def get_passport(message, user_name):
 
     photo_id = message.photo[-1].file_id
 
-   username = message.from_user.username
+    username = message.from_user.username
 
-if username:
-    username = "@" + username
-else:
-    username = "Не указан"
+    if username:
+        username = "@" + username
+    else:
+        username = "Не указан"
 
-application = (
-    "📩 Новая заявка!\n\n"
-    f"👤 Имя: {user_name}\n"
-    f"📱 Telegram: {username}\n"
-    f"🆔 ID: {message.from_user.id}"
-)
+    application = (
+        "📩 Новая заявка!\n\n"
+        f"👤 Имя: {user_name}\n"
+        f"📱 Telegram: {username}\n"
+        f"🆔 ID: {message.from_user.id}"
+    )
+
     bot.send_photo(
         ADMIN_ID,
         photo_id,
@@ -85,7 +86,6 @@ application = (
         message.chat.id,
         "✅ Спасибо! Твоя анкета отправлена."
     )
-
 @bot.message_handler(func=lambda message: message.text == "📝 Заполнить анкету")
 def button_anketa(message):
     anketa(message)
