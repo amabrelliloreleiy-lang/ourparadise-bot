@@ -68,30 +68,16 @@ def get_passport(message, user_name):
         f"🆔 ID: {message.from_user.id}"
     )
 
-    bot.send_message(
-        ADMIN_ID,
-        application
-    )
-
     bot.send_photo(
         ADMIN_ID,
         photo_id,
-        caption="📸 Фото паспорта"
+        caption=application
     )
 
     bot.send_message(
         message.chat.id,
         "✅ Спасибо! Твоя анкета отправлена."
     )
-
-    if ADMIN_ID != 0:
-        bot.send_message(ADMIN_ID, application)
-
-    bot.send_message(
-        message.chat.id,
-        "Спасибо! ✅\nТвоя заявка отправлена."
-    )
-
 
 @bot.message_handler(func=lambda message: message.text == "📝 Заполнить анкету")
 def button_anketa(message):
