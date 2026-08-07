@@ -76,10 +76,25 @@ def get_passport(message, user_name):
         f"🆔 ID: {message.from_user.id}"
     )
 
+    markup = types.InlineKeyboardMarkup()
+
+    approve_btn = types.InlineKeyboardButton(
+        "🟢 Одобрить",
+        callback_data="approve"
+    )
+
+    reject_btn = types.InlineKeyboardButton(
+        "🔴 Отклонить",
+        callback_data="reject"
+    )
+
+    markup.add(approve_btn, reject_btn)
+
     bot.send_photo(
         ADMIN_ID,
         photo_id,
-        caption=application
+        caption=application,
+        reply_markup=markup
     )
 
     bot.send_message(
