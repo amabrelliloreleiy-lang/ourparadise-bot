@@ -78,15 +78,15 @@ def get_passport(message, user_name):
 
     markup = types.InlineKeyboardMarkup()
 
-   approve_btn = types.InlineKeyboardButton(
-    "🟢 Одобрить",
-    callback_data=f"approve_{message.from_user.id}"
-)
+    approve_btn = types.InlineKeyboardButton(
+        "🟢 Одобрить",
+        callback_data=f"approve_{message.from_user.id}"
+    )
 
-reject_btn = types.InlineKeyboardButton(
-    "🔴 Отклонить",
-    callback_data=f"reject_{message.from_user.id}"
-)
+    reject_btn = types.InlineKeyboardButton(
+        "🔴 Отклонить",
+        callback_data=f"reject_{message.from_user.id}"
+    )
 
     markup.add(approve_btn, reject_btn)
 
