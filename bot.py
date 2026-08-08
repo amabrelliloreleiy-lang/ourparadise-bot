@@ -62,6 +62,47 @@ def get_passport(message, user_name):
 
     photo_id = message.photo[-1].file_id
 
+    markup = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+    emerald_btn = types.KeyboardButton("💚 Emerald")
+    ruby_btn = types.KeyboardButton("❤️ Ruby")
+
+    markup.add(emerald_btn, ruby_btn)
+
+    msg = bot.send_message(
+        message.chat.id,
+        "💬 Выберите чат, в который хотите вступить:",
+        reply_markup=markup
+    )
+
+    bot.register_next_step_handler(
+        msg,
+        lambda m: get_chat(m, user_name, photo_id)
+    )
+
+
+def get_chat(message, user_name, photo_id):
+    chat_choice = message.text
+
+    if chat_choice not in ["💚 Emerald", "❤️ Ruby"]:
+        msg = bot.send_message(
+            message.chat.id,
+            "❗Пожалуйста, выберите Emerald или Ruby."
+        )
+        bot.register_next_step_handler(
+            msg,
+            lambda m: get_chat(m, user_name, photo_id)
+        )
+        return
+
+    bot.send_message(
+        message.chat.id,
+        "⏳ Спасибо! Твоя заявка почти готова."
+    )
+
     username = message.from_user.username
 
     if username:
@@ -73,6 +114,7 @@ def get_passport(message, user_name):
         "📩 Новая заявка!\n\n"
         f"👤 Имя: {user_name}\n"
         f"📱 Telegram: {username}\n"
+        f"💬 Чат: {chat_choice}\n"
         f"🆔 ID: {message.from_user.id}"
     )
 
