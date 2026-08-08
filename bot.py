@@ -120,15 +120,17 @@ def get_chat(message, user_name, photo_id):
 
     markup = types.InlineKeyboardMarkup()
 
-   approve_btn = types.InlineKeyboardButton(
-    "🟢 Одобрить",
-    callback_data=f"approve_{message.from_user.id}_{chat_choice}"
-)
+  chat_code = "emerald" if chat_choice == "💚 Emerald" else "ruby"
 
-reject_btn = types.InlineKeyboardButton(
-    "🔴 Отклонить",
-    callback_data=f"reject_{message.from_user.id}_{chat_choice}"
-)
+    approve_btn = types.InlineKeyboardButton(
+        "🟢 Одобрить",
+        callback_data=f"approve_{message.from_user.id}_{chat_code}"
+    )
+
+    reject_btn = types.InlineKeyboardButton(
+        "🔴 Отклонить",
+        callback_data=f"reject_{message.from_user.id}_{chat_code}"
+    )
 
     markup.add(approve_btn, reject_btn)
 
@@ -161,20 +163,33 @@ print("Бот запущен!")
 bot.remove_webhook()
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
-    data = call.data.split("_")
+    data = call.data.split("_", 2)
 
     action = data[0]
     user_id = data[1]
+    chat_code = data[2]
+
+    CHAT_LINKS = {
+        "emerald": ("💚 Emerald", "https://t.me/+969IILczHrFhZjli"),
+        "ruby": ("❤️ Ruby", "https://t.me/+QHf2PYZfIroyODAy")
+    }
+
+    chat_name, chat_link = CHAT_LINKS.get(
+        chat_code,
+        ("Неизвестный чат", "")
+    )
 
     if action == "approve":
         bot.send_message(
             user_id,
-            "✅ Ваша заявка одобрена!"
+            f"✅ Ваша заявка одобрена!\n\n"
+            f"💬 Ваш чат: {chat_name}\n\n"
+            f"🔗 Ссылка для вступления:\n{chat_link}"
         )
 
         bot.answer_callback_query(
             call.id,
-            "Заявка одобрена"
+            f"Заявка одобрена — {chat_name}"
         )
 
     elif action == "reject":
@@ -185,7 +200,7 @@ def callback_handler(call):
 
         bot.answer_callback_query(
             call.id,
-            "Заявка отклонена"
+            f"Заявка отклонена — {chat_name}"
         )
 
 
