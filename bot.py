@@ -173,6 +173,70 @@ def about(message):
 print("Бот запущен!")
 
 bot.remove_webhook()
+# НОВЫЙ БЛОК ДЛЯ ЗАЯВОК АДМИНОВ
+@bot.callback_query_handler(func=lambda call: call.data.startswith("admin_"))
+def admin_callback_handler(call):
+    data = call.data.split("_")
+
+    action = data[1]
+    user_id = data[2]
+
+    admin_chat_link = "https://t.me/+YpJC1N884SJjNDQy"
+
+    if action == "approve":
+        bot.send_message(
+            user_id,
+            "🎉 Твоя заявка на администратора одобрена!\n\n"
+            "👑 Добро пожаловать в команду!\n\n"
+            f"🔗 Ссылка на админский чат:\n{admin_chat_link}"
+        )
+
+        bot.answer_callback_query(
+            call.id,
+            "✅ Заявка одобрена!"
+        )
+
+        bot.edit_message_reply_markup(
+            call.message.chat.id,
+            call.message.message_id,
+            reply_markup=None
+        )
+
+        bot.edit_message_text(
+            f"{call.message.text}\n\n"
+            "━━━━━━━━━━━━━━\n"
+            "✅ ЗАЯВКА НА АДМИНА ОДОБРЕНА",
+            call.message.chat.id,
+            call.message.message_id
+        )
+
+    elif action == "reject":
+        bot.send_message(
+            user_id,
+            "❌ К сожалению, твоя заявка на администратора не одобрена."
+        )
+
+        bot.answer_callback_query(
+            call.id,
+            "❌ Заявка отклонена."
+        )
+
+        bot.edit_message_reply_markup(
+            call.message.chat.id,
+            call.message.message_id,
+            reply_markup=None
+        )
+
+        bot.edit_message_text(
+            f"{call.message.text}\n\n"
+            "━━━━━━━━━━━━━━\n"
+            "❌ ЗАЯВКА НА АДМИНА ОТКЛОНЕНА",
+            call.message.chat.id,
+            call.message.message_id
+        )
+
+
+# СТАРЫЙ ОБРАБОТЧИК ОБЫЧНЫХ ЗАЯВОК
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     data = call.data.split("_", 2)
@@ -404,9 +468,24 @@ def get_admin_role(
         f"🆔 ID: {telegram_id}"
     )
 
+    markup = types.InlineKeyboardMarkup()
+
+    approve_btn = types.InlineKeyboardButton(
+        "🟢 Одобрить",
+        callback_data=f"admin_approve_{telegram_id}"
+    )
+
+    reject_btn = types.InlineKeyboardButton(
+        "🔴 Отклонить",
+        callback_data=f"admin_reject_{telegram_id}"
+    )
+
+    markup.add(approve_btn, reject_btn)
+
     bot.send_message(
         ADMIN_ID,
-        application
+        application,
+        reply_markup=markup
     )
 
     bot.send_message(
