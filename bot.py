@@ -120,15 +120,15 @@ def get_chat(message, user_name, photo_id):
 
     markup = types.InlineKeyboardMarkup()
 
-    approve_btn = types.InlineKeyboardButton(
-        "🟢 Одобрить",
-        callback_data=f"approve_{message.from_user.id}"
-    )
+   approve_btn = types.InlineKeyboardButton(
+    "🟢 Одобрить",
+    callback_data=f"approve_{message.from_user.id}_{chat_choice}"
+)
 
-    reject_btn = types.InlineKeyboardButton(
-        "🔴 Отклонить",
-        callback_data=f"reject_{message.from_user.id}"
-    )
+reject_btn = types.InlineKeyboardButton(
+    "🔴 Отклонить",
+    callback_data=f"reject_{message.from_user.id}_{chat_choice}"
+)
 
     markup.add(approve_btn, reject_btn)
 
