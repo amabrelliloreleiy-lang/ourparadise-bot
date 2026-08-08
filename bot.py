@@ -192,6 +192,20 @@ def callback_handler(call):
             f"Заявка одобрена — {chat_name}"
         )
 
+        bot.edit_message_reply_markup(
+            call.message.chat.id,
+            call.message.message_id,
+            reply_markup=None
+        )
+
+        bot.edit_message_caption(
+            f"{call.message.caption}\n\n"
+            f"━━━━━━━━━━━━━━\n"
+            f"✅ ЗАЯВКА ОДОБРЕНА — {chat_name}",
+            call.message.chat.id,
+            call.message.message_id
+        )
+
     elif action == "reject":
         bot.send_message(
             user_id,
@@ -203,5 +217,18 @@ def callback_handler(call):
             f"Заявка отклонена — {chat_name}"
         )
 
+        bot.edit_message_reply_markup(
+            call.message.chat.id,
+            call.message.message_id,
+            reply_markup=None
+        )
+
+        bot.edit_message_caption(
+            f"{call.message.caption}\n\n"
+            f"━━━━━━━━━━━━━━\n"
+            f"❌ ЗАЯВКА ОТКЛОНЕНА — {chat_name}",
+            call.message.chat.id,
+            call.message.message_id
+        )
 
 bot.infinity_polling()
