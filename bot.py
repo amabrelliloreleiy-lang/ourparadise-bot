@@ -118,9 +118,9 @@ def get_chat(message, user_name, photo_id):
         f"🆔 ID: {message.from_user.id}"
     )
 
-    markup = types.InlineKeyboardMarkup()
+    chat_code = "emerald" if chat_choice == "💚 Emerald" else "ruby"
 
-  chat_code = "emerald" if chat_choice == "💚 Emerald" else "ruby"
+    markup = types.InlineKeyboardMarkup()
 
     approve_btn = types.InlineKeyboardButton(
         "🟢 Одобрить",
