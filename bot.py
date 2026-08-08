@@ -496,7 +496,7 @@ def get_admin_role(
         reply_markup=markup
     )
 
-   bot.send_message(
+    bot.send_message(
     message.chat.id,
     "🕊️ Заявка успешно отправлена!\n\n"
     "Спасибо за твоё желание помочь нашему пространству "
@@ -504,6 +504,6 @@ def get_admin_role(
     "Теперь мы всё внимательно посмотрим и обязательно "
     "вернёмся к тебе с ответом.\n\n"
     "Удачи тебе и спасибо за доверие 🌙🤍"
-)
+    )
     
 bot.infinity_polling()
