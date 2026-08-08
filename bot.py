@@ -13,17 +13,26 @@ ADMIN_ID = 6824091360
 @bot.message_handler(commands=["start"])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+
     btn1 = types.KeyboardButton("📝 Заполнить анкету")
-    btn2 = types.KeyboardButton("ℹ️ О боте")
+    btn2 = types.KeyboardButton("👑 Стать админом")
+    btn3 = types.KeyboardButton("ℹ️ О боте")
+
     markup.add(btn1, btn2)
+    markup.add(btn3)
 
     bot.send_message(
         message.chat.id,
         "Привет! 👋\n\n"
         "Добро пожаловать в нашего бота.\n"
-        "Здесь ты можешь заполнить анкету и отправить заявку.",
+        "Здесь ты можешь заполнить анкету или подать заявку на администратора.",
         reply_markup=markup
     )
+
+
+@bot.message_handler(func=lambda message: message.text == "👑 Стать админом")
+def admin_button(message):
+    admin_application_start(message)
 
 
 @bot.message_handler(commands=["anketa"])
@@ -234,4 +243,176 @@ def callback_handler(call):
             call.message.message_id
         )
 
+def admin_application_start(message):
+    msg = bot.send_message(
+        message.chat.id,
+        "👑 Заявка на администратора\n\n"
+        "Напиши своё имя:"
+    )
+
+    bot.register_next_step_handler(
+        msg,
+        get_admin_name
+    )
+
+
+def get_admin_name(message):
+    admin_name = message.text
+
+    msg = bot.send_message(
+        message.chat.id,
+        "🆔 Теперь напиши свой Telegram username:"
+    )
+
+    bot.register_next_step_handler(
+        msg,
+        lambda m: get_admin_username(m, admin_name)
+    )
+
+
+def get_admin_username(message, admin_name):
+    admin_username = message.text
+
+    markup = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+    emerald_btn = types.KeyboardButton("💚 Emerald")
+    ruby_btn = types.KeyboardButton("❤️ Ruby")
+
+    markup.add(emerald_btn, ruby_btn)
+
+    msg = bot.send_message(
+        message.chat.id,
+        "💬 В какой чат ты хочешь быть админом?",
+        reply_markup=markup
+    )
+
+    bot.register_next_step_handler(
+        msg,
+        lambda m: get_admin_chat(
+            m,
+            admin_name,
+            admin_username
+        )
+    )
+
+
+def get_admin_chat(message, admin_name, admin_username):
+    admin_chat = message.text
+
+    if admin_chat not in ["💚 Emerald", "❤️ Ruby"]:
+        msg = bot.send_message(
+            message.chat.id,
+            "❗Пожалуйста, выбери Emerald или Ruby."
+        )
+
+        bot.register_next_step_handler(
+            msg,
+            lambda m: get_admin_chat(
+                m,
+                admin_name,
+                admin_username
+            )
+        )
+        return
+
+    remove_keyboard = types.ReplyKeyboardRemove()
+
+    markup = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+    senior_btn = types.KeyboardButton("👑 Старший админ")
+    junior_btn = types.KeyboardButton("🛡️ Младший админ")
+    chat_admin_btn = types.KeyboardButton("💬 Админ по чату")
+    active_btn = types.KeyboardButton("🔥 Админ по активу")
+    edit_btn = types.KeyboardButton("🎬 Админ по монтажу")
+
+    markup.add(senior_btn, junior_btn)
+    markup.add(chat_admin_btn)
+    markup.add(active_btn, edit_btn)
+
+    msg = bot.send_message(
+        message.chat.id,
+        "👑 Каким админом ты хочешь быть?",
+        reply_markup=markup
+    )
+
+    bot.register_next_step_handler(
+        msg,
+        lambda m: get_admin_role(
+            m,
+            admin_name,
+            admin_username,
+            admin_chat
+        )
+    )
+
+
+def get_admin_role(
+    message,
+    admin_name,
+    admin_username,
+    admin_chat
+):
+    admin_role = message.text
+
+    roles = [
+        "👑 Старший админ",
+        "🛡️ Младший админ",
+        "💬 Админ по чату",
+        "🔥 Админ по активу",
+        "🎬 Админ по монтажу"
+    ]
+
+    if admin_role not in roles:
+        msg = bot.send_message(
+            message.chat.id,
+            "❗Пожалуйста, выбери одну из предложенных ролей."
+        )
+
+        bot.register_next_step_handler(
+            msg,
+            lambda m: get_admin_role(
+                m,
+                admin_name,
+                admin_username,
+                admin_chat
+            )
+        )
+        return
+
+    remove_keyboard = types.ReplyKeyboardRemove()
+
+    bot.send_message(
+        message.chat.id,
+        "⏳ Формирую твою заявку...",
+        reply_markup=remove_keyboard
+    )
+
+    telegram_id = message.from_user.id
+
+    application = (
+        "👑 НОВАЯ ЗАЯВКА НА АДМИНИСТРАТОРА!\n\n"
+        f"👤 Имя: {admin_name}\n"
+        f"🆔 Telegram: {admin_username}\n"
+        f"💬 Чат: {admin_chat}\n"
+        f"👑 Роль: {admin_role}\n"
+        f"🆔 ID: {telegram_id}"
+    )
+
+    bot.send_message(
+        ADMIN_ID,
+        application
+    )
+
+    bot.send_message(
+        message.chat.id,
+        "✅ Твоя заявка на администратора отправлена!\n\n"
+        "Ожидай решения."
+    )
+    
 bot.infinity_polling()
