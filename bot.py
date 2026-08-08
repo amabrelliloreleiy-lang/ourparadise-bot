@@ -21,13 +21,16 @@ def start(message):
     markup.add(btn1, btn2)
     markup.add(btn3)
 
-    bot.send_message(
-        message.chat.id,
-        "Привет! 👋\n\n"
-        "Добро пожаловать в нашего бота.\n"
-        "Здесь ты можешь заполнить анкету или подать заявку на администратора.",
-        reply_markup=markup
-    )
+   bot.send_message(
+    message.chat.id,
+    "🌷 Привет, добро пожаловать!\n\n"
+    "Очень рады видеть тебя здесь ♡\n"
+    "Если хочешь присоединиться к нашему уютному пространству — заполни анкету ниже.\n\n"
+    "А если чувствуешь, что хочешь стать частью нашей команды — "
+    "можешь попробовать себя в роли администратора ✨\n\n"
+    "Выбирай то, что тебе подходит 💗",
+    reply_markup=markup
+)
 
 
 @bot.message_handler(func=lambda message: message.text == "👑 Стать админом")
@@ -153,10 +156,14 @@ def get_chat(message, user_name, photo_id):
         reply_markup=markup
     )
 
-    bot.send_message(
-        message.chat.id,
-        "✅ Спасибо! Твоя анкета отправлена."
-    )
+   bot.send_message(
+    message.chat.id,
+    "♡ Спасибо за твою заявку!\n\n"
+    "Анкета успешно отправлена и уже совсем скоро будет рассмотрена администрацией 🌷\n\n"
+    "Пожалуйста, немного подожди. Если всё будет хорошо, "
+    "тебе обязательно придёт сообщение с дальнейшими шагами ♡\n\n"
+    "До скорой встречи! 🫶🏻"
+)
 @bot.message_handler(func=lambda message: message.text == "📝 Заполнить анкету")
 def button_anketa(message):
     anketa(message)
@@ -488,10 +495,14 @@ def get_admin_role(
         reply_markup=markup
     )
 
-    bot.send_message(
-        message.chat.id,
-        "✅ Твоя заявка на администратора отправлена!\n\n"
-        "Ожидай решения."
-    )
+   bot.send_message(
+    message.chat.id,
+    "🕊️ Заявка успешно отправлена!\n\n"
+    "Спасибо за твоё желание помочь нашему пространству "
+    "и стать его частью ♡\n\n"
+    "Теперь мы всё внимательно посмотрим и обязательно "
+    "вернёмся к тебе с ответом.\n\n"
+    "Удачи тебе и спасибо за доверие 🌙🤍"
+)
     
 bot.infinity_polling()
