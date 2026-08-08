@@ -157,14 +157,14 @@ def get_chat(message, user_name, photo_id):
         reply_markup=markup
     )
 
-   bot.send_message(
+    bot.send_message(
     message.chat.id,
     "♡ Спасибо за твою заявку!\n\n"
     "Анкета успешно отправлена и уже совсем скоро будет рассмотрена администрацией 🌷\n\n"
     "Пожалуйста, немного подожди. Если всё будет хорошо, "
     "тебе обязательно придёт сообщение с дальнейшими шагами ♡\n\n"
     "До скорой встречи! 🫶🏻"
-)
+    )
 @bot.message_handler(func=lambda message: message.text == "📝 Заполнить анкету")
 def button_anketa(message):
     anketa(message)
