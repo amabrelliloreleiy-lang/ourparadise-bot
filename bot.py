@@ -98,9 +98,12 @@ def get_chat(message, user_name, photo_id):
         )
         return
 
+    remove_keyboard = types.ReplyKeyboardRemove()
+
     bot.send_message(
         message.chat.id,
-        "⏳ Спасибо! Твоя заявка почти готова."
+        "⏳ Спасибо! Твоя заявка почти готова.",
+        reply_markup=remove_keyboard
     )
 
     username = message.from_user.username
